@@ -17,8 +17,16 @@ MemoryInfo get_memory_info() {
         std::string key;
         long value;
 
-        iss >> key >> value;
-        // key includes the colon, e.g. "MemTotal:"
+        /*  Sample output to parse:
+            MemTotal:        7825744 kB
+            MemFree:         7143208 kB
+            MemAvailable:    7150484 kB
+            Buffers:           24956 kB
+            Cached:           193484 kB
+            ...
+        */
+
+        iss >> key >> value;   
 
         if (key == "MemTotal:") {
             info.total_kb = value;
