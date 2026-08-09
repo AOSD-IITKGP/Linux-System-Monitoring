@@ -1,1 +1,1 @@
-"# Linux-System-Monitoring" 
+The details of the project can be found in proc_monitor/README.md
