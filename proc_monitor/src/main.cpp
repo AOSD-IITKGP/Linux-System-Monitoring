@@ -6,7 +6,7 @@
 // uncomment these as you implement each module
 #include "cpu_info.hpp"
 #include "mem_info.hpp"
-// #include "stats_info.hpp"
+#include "stats_info.hpp"
 // #include "process_info.hpp"
 // #include "display.hpp"
 
@@ -50,6 +50,7 @@ int main(int argc, char* argv[]) {
         std::cout << "Static mode" << std::endl;
 
         // Task 1: CPU and Memory Information
+        std::cout << "1. CPU AND MEMORY INFORMATION:" << std::endl;
         CpuInfo cpu = get_cpu_info();
         std::cout << "CPU Model      : " << cpu.model << std::endl;
         std::cout << "Logical CPUs   : " << cpu.logical_cpus << std::endl;
@@ -62,7 +63,19 @@ int main(int argc, char* argv[]) {
         std::cout << "Memory Usage   : " << std::setprecision(1) << mem.usage_percent << "%" << std::endl;
 
         // Task 2: CPU Utilization and System Statistics
-        // TODO: stats_info
+        StatsInfo stats = get_stats_info();
+        std::cout << "2. CPU UTILIZATION & SYSTEM STATISTICS:" << std::endl;
+        std::cout << "CPU Usage      : " << std::fixed << std::setprecision(1) << stats.cpu_usage << "%" << std::endl;
+
+        // convert uptime to days, hours, minutes
+        int total_seconds = (int)stats.uptime_seconds;
+        int days    = total_seconds / 86400;
+        int hours   = (total_seconds % 86400) / 3600;
+        int minutes = (total_seconds % 3600) / 60;
+        std::cout << "System Uptime  : " << days << " Days " << hours << " Hours " << minutes << " Minutes" << std::endl;
+
+        std::cout << "Load Average   : " << std::setprecision(2) << stats.load_1 << " (1 min)  " 
+                  << stats.load_5 << " (5 min)  " << stats.load_15 << " (15 min)" << std::endl;
 
         // Task 3: Process Information
         // TODO: process_info (list all)
