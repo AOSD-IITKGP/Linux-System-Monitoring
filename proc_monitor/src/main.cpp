@@ -1,10 +1,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <iomanip>
 
 // uncomment these as you implement each module
 #include "cpu_info.hpp"
-// #include "memory_info.hpp"
+#include "mem_info.hpp"
 // #include "stats_info.hpp"
 // #include "process_info.hpp"
 // #include "display.hpp"
@@ -52,7 +53,13 @@ int main(int argc, char* argv[]) {
         CpuInfo cpu = get_cpu_info();
         std::cout << "CPU Model      : " << cpu.model << std::endl;
         std::cout << "Logical CPUs   : " << cpu.logical_cpus << std::endl;
-        // TODO: memory_info
+
+        MemoryInfo mem = get_memory_info();
+        std::cout << "Total Memory   : " << std::fixed << std::setprecision(2) 
+                  << mem.total_kb / (1024.0 * 1024.0) << " GB" << std::endl;
+        std::cout << "Available Memory: " << mem.available_kb / (1024.0 * 1024.0) << " GB" << std::endl;
+        std::cout << "Free Memory    : " << mem.free_kb / (1024.0 * 1024.0) << " GB" << std::endl;
+        std::cout << "Memory Usage   : " << std::setprecision(1) << mem.usage_percent << "%" << std::endl;
 
         // Task 2: CPU Utilization and System Statistics
         // TODO: stats_info
