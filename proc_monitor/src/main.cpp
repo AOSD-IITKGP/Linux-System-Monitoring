@@ -7,7 +7,7 @@
 #include "cpu_info.hpp"
 #include "mem_info.hpp"
 #include "stats_info.hpp"
-// #include "process_info.hpp"
+#include "proc_info.hpp"
 // #include "display.hpp"
 
 int main(int argc, char* argv[]) {
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
                   << mem.total_kb / (1024.0 * 1024.0) << " GB" << std::endl;
         std::cout << "Available Memory: " << mem.available_kb / (1024.0 * 1024.0) << " GB" << std::endl;
         std::cout << "Free Memory    : " << mem.free_kb / (1024.0 * 1024.0) << " GB" << std::endl;
-        std::cout << "Memory Usage   : " << std::setprecision(1) << mem.usage_percent << "%" << std::endl;
+        std::cout << "Memory Usage   : " << std::setprecision(1) << mem.usage_percent << "%" << std::endl << std::endl;
 
         // Task 2: CPU Utilization and System Statistics
         StatsInfo stats = get_stats_info();
@@ -75,10 +75,18 @@ int main(int argc, char* argv[]) {
         std::cout << "System Uptime  : " << days << " Days " << hours << " Hours " << minutes << " Minutes" << std::endl;
 
         std::cout << "Load Average   : " << std::setprecision(2) << stats.load_1 << " (1 min)  " 
-                  << stats.load_5 << " (5 min)  " << stats.load_15 << " (15 min)" << std::endl;
+                  << stats.load_5 << " (5 min)  " << stats.load_15 << " (15 min)" << std::endl << std::endl;
 
-        // Task 3: Process Information
-        // TODO: process_info (list all)
+        std::vector<ProcessInfo> processes = get_all_processes();
+        // Task 3: list all processes
+        
+        std::cout << "3. RUNNING PROCESSES INFORMATION: ";
+        std::cout << "\nPID\tPPID\tSTATE\tTHREADS\tVmSize(MB)\tNAME" << std::endl;
+        for (const auto& p : processes) {
+            std::cout << p.pid << "\t" << p.ppid << "\t" << p.state << "\t"
+                      << p.threads << "\t" << p.vm_size_kb / 1024 << "\t\t"
+                      << p.name << std::endl;
+        }
 
         // Task 4: Top Resource-Consuming Processes
         // TODO: process_info (top 5)
