@@ -4,8 +4,11 @@
 #include <sstream>
 #include <dirent.h>
 #include <algorithm>
+#include <unordered_map>
+#include <thread>
+#include <chrono>
 
-// parse /proc/[pid]/status and fill a ProcessInfo struct
+// parses /proc/[pid]/status and fills it into a ProcessInfo struct
 static bool read_process_status(int pid, ProcessInfo& proc) {
     std::string path = "/proc/" + std::to_string(pid) + "/status";
     std::ifstream file(path);
@@ -14,7 +17,7 @@ static bool read_process_status(int pid, ProcessInfo& proc) {
         return false;
     }
 
-    // set defaults
+    // NOTE (To Yesheeth): These are default values, see if there any issues.
     proc.pid = pid;
     proc.ppid = 0;
     proc.state = '?';
@@ -61,7 +64,7 @@ std::vector<ProcessInfo> get_all_processes() {
     while ((entry = readdir(dir)) != nullptr) {
         std::string name = entry->d_name;
 
-        // only numeric directories are PIDs
+        // PIDs are the directories that are numbers like 1462/
         if (!std::all_of(name.begin(), name.end(), ::isdigit)) {
             continue;
         }
@@ -72,16 +75,42 @@ std::vector<ProcessInfo> get_all_processes() {
         if (read_process_status(pid, proc)) {
             processes.push_back(proc);
         }
-        // if the file couldn't be read (process died between listing and reading), skip it
+        // NOTE (YESHEETH): Handle the case when a process dies during this function run.
     }
 
     closedir(dir);
 
-    // sort by PID for clean output
-    std::sort(processes.begin(), processes.end(),
-              [](const ProcessInfo& a, const ProcessInfo& b) {
-                  return a.pid < b.pid;
-              });
+    // sorting by PID
+    std::sort(processes.begin(), processes.end(), 
+            [](const ProcessInfo& a, const ProcessInfo& b) {
+                return a.pid < b.pid;
+            });
 
     return processes;
 }
+
+
+std::vector<ProcessInfo> get_top_memory(const std::vector<ProcessInfo>& processes, int count) {
+    // copy and sort by VmRSS descending
+    std::vector<ProcessInfo> sorted = processes;
+
+    std::sort(sorted.begin(), sorted.end(),
+                [](const ProcessInfo& a, const ProcessInfo& b) {
+                    return a.vm_rss_kb > b.vm_rss_kb;
+                });
+
+    // return top 'count' (default = 5)
+    if ((int)sorted.size() > count) {
+        sorted.resize(count);
+    }
+
+    return sorted;
+}
+
+
+// NOTE (HADWIK): Please implement this function, I guess u might need few helper functions as well
+/*
+std::vector<ProcessInfo> get_top_cpu(int count) {
+    There are some edge cases to be handled, what if a process dies in between?, is this an issue>
+}
+*/

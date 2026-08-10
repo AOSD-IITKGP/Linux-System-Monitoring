@@ -1,5 +1,15 @@
 # Guides
 AOS_Setup_Guide.pdf
 
-# other stuff
+# Other stuff
 .vscode/
+
+# Linux executables
+a.out
+*.out
+
+# Common C/C++ build outputs
+build/
+bin/
+*.o
+*.so

@@ -9,6 +9,7 @@ SRCS += $(SRC_DIR)/cpu_info.cpp
 SRCS += $(SRC_DIR)/mem_info.cpp
 SRCS += $(SRC_DIR)/stats_info.cpp
 SRCS += $(SRC_DIR)/proc_info.cpp
+SRCS += $(SRC_DIR)/display.cpp
 
 TARGET = proc_monitor
 
