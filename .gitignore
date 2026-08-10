@@ -5,8 +5,9 @@ AOS_Setup_Guide.pdf
 .vscode/
 
 # Linux executables
-a.out
-*.out
+proc_monitor/a.out
+proc_monitor/*.out
+proc_monitor/proc_monitor
 
 # Common C/C++ build outputs
 build/
