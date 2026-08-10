@@ -22,6 +22,6 @@ std::vector<ProcessInfo> get_all_processes();
 std::vector<ProcessInfo> get_top_memory(const std::vector<ProcessInfo>& processes, int count = 5);
 
 // top 5 by CPU
-std::vector<ProcessInfo> get_top_cpu(int count = 5);
+std::vector<ProcessInfo> get_top_cpu(const std::vector<ProcessInfo>& processes, int count = 5);
 
 #endif

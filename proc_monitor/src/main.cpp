@@ -49,23 +49,20 @@ int main(int argc, char* argv[]) {
         signal(SIGINT, signal_handler);
 
         while (running) {
-            std::cout << "\033[2J\033[H";
+            system("clear");
 
             CpuInfo cpu = get_cpu_info();
             MemoryInfo mem = get_memory_info();
             StatsInfo stats = get_stats_info();
             std::vector<ProcessInfo> processes = get_all_processes();
             std::vector<ProcessInfo> top_mem = get_top_memory(processes);
-
-            // TODO (Hadwik): implement get_top_cpu()
-            std::vector<ProcessInfo> top_cpu; // empty for now
+            std::vector<ProcessInfo> top_cpu = get_top_cpu(processes);
 
             display_all(cpu, mem, stats, processes, top_mem, top_cpu);
 
             // stats_info already sleeps 1 second, so sleep remaining T-1
             if (interval > 1 && running) {
-                std::this_thread::sleep_for(
-                    std::chrono::seconds(interval - 1));
+                std::this_thread::sleep_for(std::chrono::seconds(interval - 1));
             }
         }
 
@@ -77,9 +74,7 @@ int main(int argc, char* argv[]) {
         StatsInfo stats = get_stats_info();
         std::vector<ProcessInfo> processes = get_all_processes();
         std::vector<ProcessInfo> top_mem = get_top_memory(processes);
-
-        // TODO (Hadwik): implement get_top_cpu()
-        std::vector<ProcessInfo> top_cpu; // empty for now
+        std::vector<ProcessInfo> top_cpu = get_top_cpu(processes);
 
         display_all(cpu, mem, stats, processes, top_mem, top_cpu);
     }
