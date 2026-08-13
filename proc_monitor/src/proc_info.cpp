@@ -18,13 +18,14 @@ static bool read_process_status(int pid, ProcessInfo& proc) {
         return false;
     }
 
-    // NOTE (To Yesheeth): These are default values, see if there any issues.
+    // initialize proc with default values
+    // if a field is not present in the status file, it will remain as -1 or '?' (for state)
     proc.pid = pid;
-    proc.ppid = 0;
+    proc.ppid = -1;
     proc.state = '?';
-    proc.threads = 0;
-    proc.vm_size_kb = 0;
-    proc.vm_rss_kb = 0;
+    proc.threads = -1;
+    proc.vm_size_kb = -1;
+    proc.vm_rss_kb = -1;
 
     std::string line;
     while (std::getline(file, line)) {
@@ -76,7 +77,8 @@ std::vector<ProcessInfo> get_all_processes() {
         if (read_process_status(pid, proc)) {
             processes.push_back(proc);
         }
-        // NOTE (YESHEETH): Handle the case when a process dies during this function run.
+        // If a process dies between reading the directory and reading its status.
+        // read_process_status will return false and we simply skip that process.
     }
 
     closedir(dir);
