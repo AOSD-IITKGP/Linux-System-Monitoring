@@ -43,6 +43,10 @@ int main(int argc, char* argv[]) {
             std::cerr << "Error: interval must be a positive integer" << std::endl;
             return 1;
         }
+        if(interval <= 2) { // as the internal sleeps for 2 seconds, we need to ensure that the interval is at least 2 seconds
+            std::cerr << "Warning: Interval less than or equal to 2 seconds may not provide accurate CPU usage data." << std::endl;
+            return 1;
+        }
     }
 
     if (live_mode) {
@@ -55,14 +59,15 @@ int main(int argc, char* argv[]) {
             MemoryInfo mem = get_memory_info();
             StatsInfo stats = get_stats_info();
             std::vector<ProcessInfo> processes = get_all_processes();
-            std::vector<ProcessInfo> top_mem = get_top_memory(processes);
-            std::vector<ProcessInfo> top_cpu = get_top_cpu(processes);
+            std::vector<ProcessInfo> top_mem = get_top_memory(processes, 5);
+            std::vector<ProcessInfo> top_cpu = get_top_cpu(processes, 5);
 
             display_all(cpu, mem, stats, processes, top_mem, top_cpu);
 
-            // stats_info already sleeps 1 second, so sleep remaining T-1
-            if (interval > 1 && running) {
-                std::this_thread::sleep_for(std::chrono::seconds(interval - 1));
+            // stats_info already sleeps 1 second and proc_info sleeps 1 second, so sleep remaining T-2
+        
+            if (interval > 2 && running) {
+                std::this_thread::sleep_for(std::chrono::seconds(interval - 2));
             }
         }
 

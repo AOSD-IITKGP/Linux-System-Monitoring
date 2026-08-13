@@ -26,6 +26,7 @@ static bool read_process_status(int pid, ProcessInfo& proc) {
     proc.threads = -1;
     proc.vm_size_kb = -1;
     proc.vm_rss_kb = -1;
+    proc.cpu_usage = 0.0;
 
     std::string line;
     while (std::getline(file, line)) {
@@ -119,6 +120,19 @@ static bool read_proc_cpu_ticks(int pid, long& total_ticks) {
     if (!file.is_open()) {
         return false;
     }
+    //  Fields in /proc/[pid]/stat :
+    //  1   ->  PID
+    //  2   ->  Process Name (inside parentheses)
+    //  3   ->  State
+    //  4   ->  PPID
+    //  5   ->  PGRP
+    //  6   ->  Session
+    //  7   ->  TTY_NR
+    //  8   ->  TPGID
+    //  9   ->  Flags
+    //  ...
+    //  14  ->  utime (CPU time in user mode)
+    //  15  ->  stime (CPU time in kernel mode)
 
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     file.close();
@@ -131,7 +145,6 @@ static bool read_proc_cpu_ticks(int pid, long& total_ticks) {
 
     std::istringstream iss(content.substr(close_paren + 1));
 
-    // 3 state, 4 ppid, 5 pgrp, 6 session, 7 tty_nr, 8 tpgid, 9 flags, 10 minflt, 11 cminflt, 12 majflt, 13 cmajflt, 14 utime, 15 stime
     std::string state;
     iss >> state; // field 3
 
@@ -149,6 +162,7 @@ static bool read_proc_cpu_ticks(int pid, long& total_ticks) {
 }
 
 std::vector<ProcessInfo> get_top_cpu(const std::vector<ProcessInfo>& processes, int count) {
+    // CPU Usage is calculated here by change in cpu ticks divided by ticks per second (from sysconf) over a 1-second interval.
     long ticks_per_sec = sysconf(_SC_CLK_TCK);
     if (ticks_per_sec <= 0) {
         ticks_per_sec = 100; // sane fallback, 100 Hz is the common default
@@ -163,7 +177,7 @@ std::vector<ProcessInfo> get_top_cpu(const std::vector<ProcessInfo>& processes, 
         }
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(1)); // sleep for a second and then recalculate the ticks again for the second sample
 
     // second sample + delta
     std::vector<ProcessInfo> result;
@@ -177,7 +191,8 @@ std::vector<ProcessInfo> get_top_cpu(const std::vector<ProcessInfo>& processes, 
             continue; // wasn't readable in the first sample either
         }
 
-        long delta_ticks = after_ticks - it->second;
+        long before_ticks = it->second;
+        long delta_ticks = after_ticks - before_ticks;
         if (delta_ticks < 0) delta_ticks = 0;
 
         ProcessInfo entry = p;

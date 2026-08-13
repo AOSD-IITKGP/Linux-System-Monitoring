@@ -10,9 +10,9 @@ struct ProcessInfo {
     int ppid;
     char state;         // can be R, S, D, Z, T
     int threads;
-    long vm_size_kb;    // VmSize : Total virtual address space the process has mapped (0 if not present (kernel threads))
-    long vm_rss_kb;     // VmRSS  : Portion of VmSize that is in RAM
-    double cpu_usage;   
+    long vm_size_kb;    // VmSize: total virtual memory in KB (0 for kernel threads)
+    long vm_rss_kb;     // VmRSS : resident set size in KB
+    double cpu_usage;   // CPU usage percentage
 };
 
 // get info for all processes
