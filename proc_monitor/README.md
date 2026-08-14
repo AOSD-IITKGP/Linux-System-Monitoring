@@ -5,6 +5,42 @@ S.No          Name            Roll number
 3. 
 
 
+Build & Run:
+
+Build:
+
+- Using the Makefile (recommended)
+
+    make
+
+- Or compile directly with g++
+
+    g++ -Wall -Wextra -std=c++17 -o proc_monitor src/*.cpp
+
+Run modes:
+
+- Static (one-shot)
+
+    ./proc_monitor
+
+  Shows a single snapshot of CPU, memory, system statistics and running processes.
+
+- Live (repeating)
+
+    ./proc_monitor -T 5
+
+  Refreshes the display every 5 seconds. Press Ctrl+C to stop.
+
+Clean build artifacts:
+
+    make clean
+
+Notes:
+
+- Run these commands from the proc_monitor project directory.
+- On Windows, use WSL or a Linux environment to access /proc.
+
+
 Proposed File Structure:
 proc_monitor/
 ├── Makefile
