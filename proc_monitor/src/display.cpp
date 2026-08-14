@@ -90,7 +90,7 @@ void display_all(const CpuInfo& cpu,
 
     std::cout << "-------------------------------------------------------------" << std::endl;
 
-    // Task 4: Top 5 Memory Consumers
+    // Task 4: Top 5 Memory Consumers and CPU Consumers
     std::cout << "[4] TOP 5 MEMORY CONSUMERS" << std::endl;
     std::cout << "-------------------------------------------------------------" << std::endl;
 
@@ -110,7 +110,6 @@ void display_all(const CpuInfo& cpu,
 
     std::cout << "-------------------------------------------------------------" << std::endl;
 
-    // Task 5: Top 5 CPU Consumers
     std::cout << "TOP 5 CPU CONSUMERS" << std::endl;
     std::cout << "-------------------------------------------------------------" << std::endl;
 

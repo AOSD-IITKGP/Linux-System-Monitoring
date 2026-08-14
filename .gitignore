@@ -8,6 +8,8 @@ AOS_Setup_Guide.pdf
 proc_monitor/a.out
 proc_monitor/*.out
 proc_monitor/proc_monitor
+proc_monitor/out.txt
+proc_monitor/*_pids.txt
 
 # Common C/C++ build outputs
 build/

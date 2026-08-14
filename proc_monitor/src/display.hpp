@@ -7,6 +7,7 @@
 #include "stats_info.hpp"
 #include "proc_info.hpp"
 
+// This will match the format mentioned in the assignment output
 void display_all(const CpuInfo& cpu,
                  const MemoryInfo& mem,
                  const StatsInfo& stats,
