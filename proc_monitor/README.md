@@ -109,5 +109,3 @@ Refreshes the display every 5 seconds. Press `Ctrl+C` to stop.
 
 - All commands should be run from the `proc_monitor/` project directory.
 - On Windows, use WSL (Windows Subsystem for Linux) to access `/proc`.
-- Kernel threads (e.g. `kthreadd`) will show `VmSize = 0` — this is expected since they have no user-space memory mapping.
-- Processes that exit between directory listing and file read are silently skipped — this is normal behaviour when reading from `/proc`.
